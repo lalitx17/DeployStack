@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "name": "upload",
+  "version": "1.0.0",
+  "description": "This upload service for the deployment website.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon"
+  },
+  "author": "Lalit Yadav <lalityadav.x17@gmail.com>",
+  "license": "MIT"
+}
