@@ -40,33 +40,13 @@ const cors_1 = __importDefault(require("cors"));
 const idGenerator_1 = require("./idGenerator");
 const getAllFiles_1 = require("./getAllFiles");
 const simple_git_1 = require("simple-git");
-const client_s3_1 = require("@aws-sdk/client-s3");
+const aws_1 = require("./aws");
 const path_1 = __importDefault(require("path"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-const client = new client_s3_1.S3Client({
-    region: process.env.AWS_REGION,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-    },
-});
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-function listBuckets() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const command = new client_s3_1.ListBucketsCommand({});
-            const response = yield client.send(command);
-            console.log("Buckets:", response.Buckets);
-        }
-        catch (error) {
-            console.error("Error listing buckets:", error);
-        }
-    });
-}
-listBuckets();
 app.post("/deploy", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const repoUrl = req.body.repoUrl;
     const id = (0, idGenerator_1.idGenerator)(5);
@@ -75,6 +55,9 @@ app.post("/deploy", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         id: id
     });
     const files = (0, getAllFiles_1.getAllFiles)(path_1.default.join(__dirname, `output/${id}`));
+    files.forEach((file) => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, aws_1.uploadFiles)(file.slice(__dirname.length + 1), file);
+    }));
 }));
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
