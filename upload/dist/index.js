@@ -41,6 +41,7 @@ const idGenerator_1 = require("./idGenerator");
 const getAllFiles_1 = require("./getAllFiles");
 const simple_git_1 = require("simple-git");
 const aws_1 = require("./aws");
+const aws_sqs_1 = require("./aws-sqs");
 const path_1 = __importDefault(require("path"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
@@ -58,6 +59,7 @@ app.post("/deploy", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     files.forEach((file) => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, aws_1.uploadFiles)(file.slice(__dirname.length + 1), file);
     }));
+    yield (0, aws_sqs_1.sendUploadId)(id);
 }));
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");

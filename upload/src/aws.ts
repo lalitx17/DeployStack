@@ -24,7 +24,7 @@ const client = new S3Client({
       const command = new PutObjectCommand(uploadParams);
   
       const response = await client.send(command);
-      console.log("File uploaded Successfully", response);
+      // console.log("File uploaded Successfully", response);
     } catch(error) {
       console.error("Error uploading file: ", error);
     }

@@ -4,6 +4,7 @@ import { idGenerator } from "./idGenerator";
 import { getAllFiles } from "./getAllFiles";
 import {simpleGit} from "simple-git";
 import { uploadFiles } from "./aws";
+import { sendUploadId } from "./aws-sqs";
 
 import path from 'path';
 import * as dotenv from 'dotenv';
@@ -28,6 +29,8 @@ app.post("/deploy", async(req, res) => {
     files.forEach(async (file) => {
         await uploadFiles(file.slice(__dirname.length + 1), file);
     });
+
+    await sendUploadId(id);
 })
 
 
