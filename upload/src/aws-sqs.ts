@@ -58,7 +58,7 @@ export const getStatusById = async (
   const params = {
     QueueUrl: process.env.AWS_QUEUE_URL,
     MaxNumberOfMessages: 10,
-    WaitTimeSeconds: 5,
+    WaitTimeSeconds: 20,
     MessageAttributeNames: ["All"],
   };
 

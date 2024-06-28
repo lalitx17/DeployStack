@@ -36,7 +36,7 @@ const infinitelyReceiveMessages = async () => {
           await downloadFiles(`output/${message.Body}`);
           await buildProject(`${message.Body}`);
           await uploadFinalBuild(`${message.Body}`);
-          await sendStatusMessage(`${message.Body}`, "deployed");
+          // await sendStatusMessage(`${message.Body}`, "deployed");
 
           const deleteParams = {
             QueueUrl: queueURL, 

@@ -15,8 +15,10 @@
   "author": "Lalit Yadav <lalityadav.x17@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.606.0",
     "@aws-sdk/client-s3": "^3.600.0",
     "@aws-sdk/client-sqs": "^3.600.0",
+    "@aws-sdk/lib-dynamodb": "^3.606.0",
     "@types/express": "^4.17.21",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
