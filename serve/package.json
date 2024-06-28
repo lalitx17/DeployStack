@@ -5,13 +5,20 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/index.js",
     "dev": "nodemon"
   },
   "keywords": [],
   "author": "Lalit Yadav <lalityadav.x17@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/client-sqs": "^3.600.0",
+    "@types/node": "^20.14.9",
+    "express": "^4.19.2"
   }
 }

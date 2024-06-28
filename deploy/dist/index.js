@@ -34,6 +34,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_sqs_1 = require("@aws-sdk/client-sqs");
 const dotenv = __importStar(require("dotenv"));
+const aws_1 = require("./aws");
 dotenv.config();
 const sqsClient = new client_sqs_1.SQSClient({
     region: process.env.AWS_REGION,
@@ -50,8 +51,18 @@ const infinitelyReceiveMessages = () => __awaiter(void 0, void 0, void 0, functi
             const data = yield sqsClient.send(new client_sqs_1.ReceiveMessageCommand(receiveParams));
             if (data.Messages && data.Messages.length > 0) {
                 for (const message of data.Messages) {
-                    console.log("Received message: ", message.Body);
+                    console.log("Received message: ", message);
+                    yield (0, aws_1.downloadFiles)(`output/${message.Body}`);
+                    const deleteParams = {
+                        QueueUrl: queueURL,
+                        ReceiptHandle: message.ReceiptHandle,
+                    };
+                    yield sqsClient.send(new client_sqs_1.DeleteMessageCommand(deleteParams));
+                    console.log("Message Processed and deleted");
                 }
+            }
+            else {
+                console.log("No message received.");
             }
         }
         catch (err) {
