@@ -91,7 +91,10 @@ upload/output/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+
+upload/dist
+deploy/dist
+serve/dist
 
 # Gatsby files
 .cache/
