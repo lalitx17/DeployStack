@@ -37,7 +37,6 @@ const downloadSingleFile = async (bucket: string, key: string, localPath: string
   }
 
   fs.writeFileSync(localPath, fileBuffer);
-  console.log(`File downloaded successfully to ${localPath}`);
 };
 
 
@@ -66,7 +65,7 @@ export const downloadFiles = async (prefix: string): Promise<void> => {
       }
     }
 
-    console.log('All files downloaded successfully');
+    console.log('Downloaded.');
   } catch (error) {
     console.error("Error downloading files: ", error);
     throw error;

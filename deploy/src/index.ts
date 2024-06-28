@@ -5,6 +5,8 @@ import {
 } from "@aws-sdk/client-sqs";
 import * as dotenv from "dotenv";
 import { downloadFiles } from "./aws";
+import { buildProject } from "./builder";
+import { uploadFinalBuild } from "./uploadBuild";
 dotenv.config();
 
 const sqsClient = new SQSClient({
@@ -28,9 +30,11 @@ const infinitelyReceiveMessages = async () => {
 
       if (data.Messages && data.Messages.length > 0) {
         for (const message of data.Messages) {
-          console.log("Received message: ", message);
+          console.log("Received message: ", message.Body);
 
           await downloadFiles(`output/${message.Body}`);
+          await buildProject(`${message.Body}`);
+          await uploadFinalBuild(`${message.Body}`);
 
           const deleteParams = {
             QueueUrl: queueURL, 
