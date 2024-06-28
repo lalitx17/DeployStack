@@ -4,7 +4,7 @@ import { idGenerator } from "./idGenerator";
 import { getAllFiles } from "./getAllFiles";
 import {simpleGit} from "simple-git";
 import { uploadFiles } from "./aws";
-import { sendUploadId } from "./aws-sqs";
+import { sendUploadId, sendStatusMessage, getStatusById } from "./aws-sqs";
 
 import path from 'path';
 import * as dotenv from 'dotenv';
@@ -31,6 +31,16 @@ app.post("/deploy", async(req, res) => {
     });
 
     await sendUploadId(id);
+    await sendStatusMessage(id, "uploaded");
+});
+
+
+app.get("/status", async(req, res) => {
+    const id = req.query.id;
+    const response = await getStatusById(`${id}`);
+    res.json({
+        status: response
+    })
 })
 
 
