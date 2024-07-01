@@ -4,7 +4,8 @@ import { idGenerator } from "./idGenerator";
 import { getAllFiles } from "./getAllFiles";
 import {simpleGit} from "simple-git";
 import { uploadFiles } from "./aws";
-import { sendUploadId, getStatusById } from "./aws-sqs";
+import { sendUploadId} from "./aws-sqs";
+import { insertStatus, getStatusById } from "./mongoStatus";
 
 import path from 'path';
 import * as dotenv from 'dotenv';
@@ -31,6 +32,7 @@ app.post("/deploy", async(req, res) => {
     });
 
     await sendUploadId(id);
+    await insertStatus(id, "uploaded");
 });
 
 

@@ -2,12 +2,12 @@ import {
   SQSClient,
   ReceiveMessageCommand,
   DeleteMessageCommand,
-  SendMessageCommand,
 } from "@aws-sdk/client-sqs";
 import * as dotenv from "dotenv";
 import { downloadFiles } from "./aws";
 import { buildProject } from "./builder";
 import { uploadFinalBuild } from "./uploadBuild";
+import { updateStatus } from "./mongoStatus";
 dotenv.config();
 
 const sqsClient = new SQSClient({
@@ -36,7 +36,7 @@ const infinitelyReceiveMessages = async () => {
           await downloadFiles(`output/${message.Body}`);
           await buildProject(`${message.Body}`);
           await uploadFinalBuild(`${message.Body}`);
-          // await sendStatusMessage(`${message.Body}`, "deployed");
+          await updateStatus(message.Body as string, "deployed")
 
           const deleteParams = {
             QueueUrl: queueURL, 
@@ -59,27 +59,3 @@ const infinitelyReceiveMessages = async () => {
 
 infinitelyReceiveMessages();
 
-
-export const sendStatusMessage = async (id: string, status: string) => {
-  const params = {
-    QueueUrl: process.env.AWS_QUEUE_URL,
-    MessageBody: "Status update",
-    MessageAttributes: {
-      "id": {
-        DataType: "String",
-        StringValue: id
-      },
-      "status": {
-        DataType: "String",
-        StringValue: status
-      }
-    }
-  };
-  try {
-    const command = new SendMessageCommand(params);
-    const response = await sqsClient.send(command);
-    console.log("Message sent successfully", response.MessageId);
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
-}
